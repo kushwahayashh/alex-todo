@@ -68,13 +68,17 @@ export function TodoApp({ todos }: { todos: Todo[] }) {
             name="text"
             placeholder="Add a todo..."
             required
+            autoComplete="off"
+            autoCorrect="off"
+            autoCapitalize="off"
+            spellCheck="false"
             className="w-full rounded-lg border-2 border-neutral-300 bg-white pl-4 pr-12 py-3 text-sm font-medium text-black placeholder:text-neutral-400 outline-none focus:border-black hover:border-black"
           />
           <button
             type="submit"
             className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-neutral-400 hover:text-black transition-colors"
           >
-            <IconCircleArrowUpFilled size={24} />
+            <IconCircleArrowUpFilled size={32} />
           </button>
         </form>
       </div>
