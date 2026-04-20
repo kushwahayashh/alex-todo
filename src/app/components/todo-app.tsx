@@ -1,8 +1,8 @@
 "use client";
 
-import { useOptimistic, useRef } from "react";
+import { useOptimistic, useRef, startTransition } from "react";
 import { addTodo, toggleTodo, deleteTodo } from "../actions";
-import { IconCheck, IconX } from "@tabler/icons-react";
+import { IconCheck, IconX, IconCircleArrowUpFilled } from "@tabler/icons-react";
 import type { Todo } from "../types";
 
 type OptimisticAction =
@@ -37,38 +37,44 @@ export function TodoApp({ todos }: { todos: Todo[] }) {
       <TodoList
         todos={optimisticTodos}
         onToggle={async (id) => {
-          dispatch({ type: "toggle", id });
+          startTransition(() => {
+            dispatch({ type: "toggle", id });
+          });
           await toggleTodo(id);
         }}
         onDelete={async (id) => {
-          dispatch({ type: "delete", id });
+          startTransition(() => {
+            dispatch({ type: "delete", id });
+          });
           await deleteTodo(id);
         }}
       />
-      <div className="mt-6">
+      <div className="fixed bottom-0 left-0 right-0 bg-white px-4 py-4">
         <form
           ref={formRef}
           action={async (formData) => {
             const text = formData.get("text") as string;
             if (!text?.trim()) return;
             formRef.current?.reset();
-            dispatch({ type: "add", text: text.trim() });
+            startTransition(() => {
+              dispatch({ type: "add", text: text.trim() });
+            });
             await addTodo(formData);
           }}
-          className="flex gap-2"
+          className="mx-auto max-w-md relative"
         >
           <input
             type="text"
             name="text"
             placeholder="Add a todo..."
             required
-            className="flex-1 rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-black placeholder:text-neutral-400 outline-none focus:border-black"
+            className="w-full rounded-lg border-2 border-neutral-300 bg-white pl-4 pr-12 py-3 text-sm font-medium text-black placeholder:text-neutral-400 outline-none focus:border-black hover:border-black"
           />
           <button
             type="submit"
-            className="rounded-lg bg-black px-4 py-2 text-sm text-white hover:bg-neutral-800"
+            className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-neutral-400 hover:text-black transition-colors"
           >
-            Add
+            <IconCircleArrowUpFilled size={24} />
           </button>
         </form>
       </div>
@@ -114,7 +120,7 @@ function TodoList({
             />
           </button>
           <span
-            className={`flex-1 text-sm transition-all duration-200 ${
+            className={`flex-1 text-sm font-medium transition-all duration-200 ${
               todo.completed ? "text-neutral-400" : "text-black"
             }`}
           >
