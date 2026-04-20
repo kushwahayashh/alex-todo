@@ -11,8 +11,8 @@ import {
 import { IconCheck, IconSquareRoundedMinusFilled } from "@tabler/icons-react";
 import type { Todo } from "../types";
 
-const COMPLETE_THRESHOLD = 120;
-const DELETE_THRESHOLD = -120;
+const COMPLETE_THRESHOLD = 80;
+const DELETE_THRESHOLD = -80;
 
 export function SwipeableTodo({
   todo,
@@ -25,6 +25,7 @@ export function SwipeableTodo({
 }) {
   const x = useMotionValue(0);
   const [swiping, setSwiping] = useState(false);
+  const [expanded, setExpanded] = useState(false);
 
   // Right swipe (complete) - green background opacity
   const completeOpacity = useTransform(x, [0, COMPLETE_THRESHOLD], [0, 1]);
@@ -108,13 +109,16 @@ export function SwipeableTodo({
             }`}
           />
         </button>
-        <span
-          className={`flex-1 text-sm font-medium transition-all duration-200 ${
-            todo.completed ? "text-neutral-400" : "text-black"
-          }`}
+        <motion.span
+          onClick={() => !swiping && setExpanded(!expanded)}
+          animate={{ height: expanded ? "auto" : "1.25rem" }}
+          transition={{ duration: 0.2, ease: "easeInOut" }}
+          className={`flex-1 text-sm font-medium cursor-pointer overflow-hidden ${
+            expanded ? "" : "truncate"
+          } ${todo.completed ? "text-neutral-400" : "text-black"}`}
         >
           {todo.text}
-        </span>
+        </motion.span>
       </motion.div>
     </div>
   );
