@@ -2,7 +2,9 @@
 
 import { useOptimistic, useRef, startTransition } from "react";
 import { addTodo, toggleTodo, deleteTodo } from "../actions";
-import { IconCheck, IconX, IconCircleArrowUpFilled } from "@tabler/icons-react";
+import { IconCircleArrowUpFilled } from "@tabler/icons-react";
+import { AnimatePresence, motion } from "framer-motion";
+import { SwipeableTodo } from "./swipeable-todo";
 import type { Todo } from "../types";
 
 type OptimisticAction =
@@ -34,21 +36,44 @@ export function TodoApp({ todos }: { todos: Todo[] }) {
 
   return (
     <>
-      <TodoList
-        todos={optimisticTodos}
-        onToggle={async (id) => {
-          startTransition(() => {
-            dispatch({ type: "toggle", id });
-          });
-          await toggleTodo(id);
-        }}
-        onDelete={async (id) => {
-          startTransition(() => {
-            dispatch({ type: "delete", id });
-          });
-          await deleteTodo(id);
-        }}
-      />
+      {optimisticTodos.length === 0 ? (
+        <p className="py-8 text-center text-sm text-neutral-400">
+          No todos yet. Add one below.
+        </p>
+      ) : (
+        <ul className="divide-y divide-neutral-100">
+          <AnimatePresence initial={false}>
+            {optimisticTodos.map((todo) => (
+              <motion.li
+                key={todo.id}
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{
+                  opacity: { duration: 0.2 },
+                  height: { type: "spring", stiffness: 400, damping: 35 },
+                }}
+              >
+                <SwipeableTodo
+                  todo={todo}
+                  onToggle={async (id) => {
+                    startTransition(() => {
+                      dispatch({ type: "toggle", id });
+                    });
+                    await toggleTodo(id);
+                  }}
+                  onDelete={async (id) => {
+                    startTransition(() => {
+                      dispatch({ type: "delete", id });
+                    });
+                    await deleteTodo(id);
+                  }}
+                />
+              </motion.li>
+            ))}
+          </AnimatePresence>
+        </ul>
+      )}
       <div className="fixed bottom-0 left-0 right-0 bg-white px-4 py-4">
         <form
           ref={formRef}
@@ -87,61 +112,5 @@ export function TodoApp({ todos }: { todos: Todo[] }) {
         </form>
       </div>
     </>
-  );
-}
-
-function TodoList({
-  todos,
-  onToggle,
-  onDelete,
-}: {
-  todos: Todo[];
-  onToggle: (id: number) => void;
-  onDelete: (id: number) => void;
-}) {
-  if (todos.length === 0) {
-    return (
-      <p className="py-8 text-center text-sm text-neutral-400">
-        No todos yet. Add one above.
-      </p>
-    );
-  }
-
-  return (
-    <ul className="divide-y divide-neutral-200">
-      {todos.map((todo) => (
-        <li key={todo.id} className="flex items-center gap-3 py-3">
-          <button
-            onClick={() => onToggle(todo.id)}
-            className={`flex h-5 w-5 shrink-0 items-center justify-center rounded border transition-all duration-200 ${
-              todo.completed
-                ? "border-black bg-black scale-100"
-                : "border-neutral-300 bg-white hover:border-neutral-400"
-            }`}
-          >
-            <IconCheck
-              size={14}
-              stroke={3}
-              className={`text-white transition-all duration-200 ${
-                todo.completed ? "scale-100 opacity-100" : "scale-0 opacity-0"
-              }`}
-            />
-          </button>
-          <span
-            className={`flex-1 text-sm font-medium transition-all duration-200 ${
-              todo.completed ? "text-neutral-400" : "text-black"
-            }`}
-          >
-            {todo.text}
-          </span>
-          <button
-            onClick={() => onDelete(todo.id)}
-            className="shrink-0 text-neutral-300 hover:text-black transition-colors"
-          >
-            <IconX size={16} stroke={1.5} />
-          </button>
-        </li>
-      ))}
-    </ul>
   );
 }

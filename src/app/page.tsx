@@ -8,7 +8,7 @@ export default async function Home() {
 
   return (
     <div className="flex min-h-dvh flex-col bg-white">
-      <div className="flex-1 px-4 pt-6 pb-24">
+      <div className="flex-1 pt-6 pb-24">
         <div className="mx-auto w-full max-w-md">
           <TodoApp todos={todos} />
         </div>
