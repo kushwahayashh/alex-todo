@@ -11,8 +11,8 @@ import {
 import { IconCheck, IconSquareRoundedMinusFilled } from "@tabler/icons-react";
 import type { Todo } from "../types";
 
-const COMPLETE_THRESHOLD = 80;
-const DELETE_THRESHOLD = -80;
+const COMPLETE_THRESHOLD = 120;
+const DELETE_THRESHOLD = -120;
 
 export function SwipeableTodo({
   todo,
@@ -28,11 +28,19 @@ export function SwipeableTodo({
 
   // Right swipe (complete) - green background opacity
   const completeOpacity = useTransform(x, [0, COMPLETE_THRESHOLD], [0, 1]);
-  const completeScale = useTransform(x, [0, 40, COMPLETE_THRESHOLD], [0.5, 0.8, 1]);
+  const completeIconOpacity = useTransform(
+    x,
+    [COMPLETE_THRESHOLD - 20, COMPLETE_THRESHOLD],
+    [0, 1]
+  );
 
   // Left swipe (delete) - red background opacity
   const deleteOpacity = useTransform(x, [DELETE_THRESHOLD, 0], [1, 0]);
-  const deleteScale = useTransform(x, [DELETE_THRESHOLD, -40, 0], [1, 0.8, 0.5]);
+  const deleteIconOpacity = useTransform(
+    x,
+    [DELETE_THRESHOLD, DELETE_THRESHOLD + 20],
+    [1, 0]
+  );
 
   const handleDragEnd = async (_: any, info: PanInfo) => {
     const offset = info.offset.x;
@@ -59,7 +67,7 @@ export function SwipeableTodo({
         className="absolute inset-0 flex items-center justify-start pl-5 bg-emerald-500"
         style={{ opacity: completeOpacity }}
       >
-        <motion.div style={{ scale: completeScale }}>
+        <motion.div style={{ opacity: completeIconOpacity }}>
           <IconCheck size={22} stroke={2.5} className="text-white" />
         </motion.div>
       </motion.div>
@@ -69,7 +77,7 @@ export function SwipeableTodo({
         className="absolute inset-0 flex items-center justify-end pr-5 bg-red-500"
         style={{ opacity: deleteOpacity }}
       >
-        <motion.div style={{ scale: deleteScale }}>
+        <motion.div style={{ opacity: deleteIconOpacity }}>
           <IconSquareRoundedMinusFilled size={22} className="text-white" />
         </motion.div>
       </motion.div>
