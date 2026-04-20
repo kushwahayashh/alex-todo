@@ -1,6 +1,5 @@
 import { getTodos } from "./actions";
-import { TodoList } from "./components/todo-list";
-import { AddTodo } from "./components/add-todo";
+import { TodoApp } from "./components/todo-app";
 import { IconCircleCheck } from "@tabler/icons-react";
 
 export const dynamic = "force-dynamic";
@@ -20,10 +19,7 @@ export default async function Home() {
       </div>
       <div className="flex-1 px-4 pt-6 pb-8">
         <div className="mx-auto w-full max-w-md">
-          <TodoList todos={todos} />
-          <div className="mt-6">
-            <AddTodo />
-          </div>
+          <TodoApp todos={todos} />
         </div>
       </div>
     </div>
