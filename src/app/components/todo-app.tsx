@@ -52,6 +52,7 @@ export function TodoApp({ todos }: { todos: Todo[] }) {
       <div className="fixed bottom-0 left-0 right-0 bg-white px-4 py-4">
         <form
           ref={formRef}
+          autoComplete="off"
           action={async (formData) => {
             const text = formData.get("text") as string;
             if (!text?.trim()) return;
@@ -70,8 +71,11 @@ export function TodoApp({ todos }: { todos: Todo[] }) {
             required
             autoComplete="off"
             autoCorrect="off"
-            autoCapitalize="off"
+            autoCapitalize="none"
             spellCheck="false"
+            data-form-type="other"
+            data-lpignore="true"
+            data-1p-ignore="true"
             className="w-full rounded-lg border-2 border-neutral-300 bg-white pl-4 pr-12 py-3 text-sm font-medium text-black placeholder:text-neutral-400 outline-none focus:border-black hover:border-black"
           />
           <button
