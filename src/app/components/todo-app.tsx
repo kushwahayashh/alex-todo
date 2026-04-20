@@ -41,7 +41,7 @@ export function TodoApp({ todos }: { todos: Todo[] }) {
           No todos yet. Add one below.
         </p>
       ) : (
-        <ul className="divide-y divide-neutral-100">
+        <ul>
           <AnimatePresence initial={false}>
             {optimisticTodos.map((todo) => (
               <motion.li
@@ -74,42 +74,38 @@ export function TodoApp({ todos }: { todos: Todo[] }) {
           </AnimatePresence>
         </ul>
       )}
-      <div className="fixed bottom-0 left-0 right-0 bg-white px-4 py-4">
-        <form
-          ref={formRef}
-          autoComplete="off"
-          action={async (formData) => {
-            const text = formData.get("text") as string;
-            if (!text?.trim()) return;
-            formRef.current?.reset();
-            startTransition(() => {
-              dispatch({ type: "add", text: text.trim() });
-            });
-            await addTodo(formData);
-          }}
-          className="mx-auto max-w-md relative"
-        >
-          <input
-            type="text"
-            name="text"
-            placeholder="Add a todo..."
-            required
+      <div className="fixed bottom-4 left-0 right-0 px-4 pb-[env(safe-area-inset-bottom,0px)]">
+        <div className="mx-auto max-w-md">
+          <form
+            ref={formRef}
             autoComplete="off"
-            autoCorrect="off"
-            autoCapitalize="none"
-            spellCheck="false"
-            data-form-type="other"
-            data-lpignore="true"
-            data-1p-ignore="true"
-            className="w-full rounded-lg border-2 border-neutral-300 bg-white pl-4 pr-12 py-3 text-sm font-medium text-black placeholder:text-neutral-400 outline-none focus:border-black hover:border-black"
-          />
-          <button
-            type="submit"
-            className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-neutral-400 hover:text-black transition-colors"
+            action={async (formData) => {
+              const text = formData.get("text") as string;
+              if (!text?.trim()) return;
+              formRef.current?.reset();
+              startTransition(() => {
+                dispatch({ type: "add", text: text.trim() });
+              });
+              await addTodo(formData);
+            }}
+            className="relative flex items-center rounded-full bg-neutral-100 shadow-[0_2px_12px_rgba(0,0,0,0.08)] ring-1 ring-neutral-200/60"
           >
-            <IconCircleArrowUpFilled size={32} />
-          </button>
-        </form>
+            <input
+              type="text"
+              name="text"
+              placeholder="New todo..."
+              required
+              autoComplete="off"
+              autoCorrect="off"
+              autoCapitalize="none"
+              spellCheck="false"
+              data-form-type="other"
+              data-lpignore="true"
+              data-1p-ignore="true"
+              className="flex-1 bg-transparent py-3.5 pl-5 pr-5 text-[15px] text-black placeholder:text-neutral-400 outline-none"
+            />
+          </form>
+        </div>
       </div>
     </>
   );

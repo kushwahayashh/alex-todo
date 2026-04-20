@@ -38,32 +38,22 @@ export function SwipeableTodo({
     const offset = info.offset.x;
 
     if (offset > COMPLETE_THRESHOLD) {
-      await animate(x, 400, {
-        type: "spring",
-        stiffness: 300,
-        damping: 30,
-      });
       onToggle(todo.id);
-      animate(x, 0, { duration: 0 });
     } else if (offset < DELETE_THRESHOLD) {
-      await animate(x, -400, {
-        type: "spring",
-        stiffness: 300,
-        damping: 30,
-      });
       onDelete(todo.id);
-    } else {
-      animate(x, 0, {
-        type: "spring",
-        stiffness: 500,
-        damping: 35,
-      });
     }
+    
+    // Always bounce back
+    animate(x, 0, {
+      type: "spring",
+      stiffness: 500,
+      damping: 35,
+    });
     setSwiping(false);
   };
 
   return (
-    <div className="relative overflow-hidden border-b border-neutral-200">
+    <div className="relative overflow-hidden border-b border-neutral-200 shadow-none">
       {/* Complete action (green, behind right swipe) */}
       <motion.div
         className="absolute inset-0 flex items-center justify-start pl-5 bg-emerald-500"
