@@ -1,7 +1,7 @@
 "use client";
 
 import { toggleTodo, deleteTodo } from "../actions";
-
+import { IconCheck, IconX } from "@tabler/icons-react";
 import type { Todo } from "../types";
 
 export function TodoList({ todos }: { todos: Todo[] }) {
@@ -19,54 +19,32 @@ export function TodoList({ todos }: { todos: Todo[] }) {
         <li key={todo.id} className="flex items-center gap-3 py-3">
           <button
             onClick={() => toggleTodo(todo.id)}
-            className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border ${
+            className={`flex h-5 w-5 shrink-0 items-center justify-center rounded border transition-all duration-200 ${
               todo.completed
-                ? "border-black bg-black"
-                : "border-neutral-300 bg-white"
+                ? "border-black bg-black scale-100"
+                : "border-neutral-300 bg-white hover:border-neutral-400"
             }`}
           >
-            {todo.completed && (
-              <svg
-                width="10"
-                height="8"
-                viewBox="0 0 10 8"
-                fill="none"
-                className="text-white"
-              >
-                <path
-                  d="M1 4L3.5 6.5L9 1"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            )}
+            <IconCheck
+              size={14}
+              stroke={3}
+              className={`text-white transition-all duration-200 ${
+                todo.completed ? "scale-100 opacity-100" : "scale-0 opacity-0"
+              }`}
+            />
           </button>
           <span
-            className={`flex-1 text-sm ${
-              todo.completed ? "text-neutral-400 line-through" : "text-black"
+            className={`flex-1 text-sm transition-all duration-200 ${
+              todo.completed ? "text-neutral-400" : "text-black"
             }`}
           >
             {todo.text}
           </span>
           <button
             onClick={() => deleteTodo(todo.id)}
-            className="shrink-0 text-neutral-300 hover:text-black"
+            className="shrink-0 text-neutral-300 hover:text-black transition-colors"
           >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              fill="none"
-            >
-              <path
-                d="M4 4L12 12M12 4L4 12"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-              />
-            </svg>
+            <IconX size={16} stroke={1.5} />
           </button>
         </li>
       ))}
