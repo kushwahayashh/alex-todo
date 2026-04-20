@@ -20,6 +20,7 @@ export function AddTodo() {
         name="text"
         placeholder="Add a todo..."
         required
+        autoComplete="off"
         className="flex-1 rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-black placeholder:text-neutral-400 outline-none focus:border-black"
       />
       <button
