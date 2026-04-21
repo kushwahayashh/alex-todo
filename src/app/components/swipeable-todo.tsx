@@ -25,9 +25,7 @@ export function SwipeableTodo({
 }) {
   const x = useMotionValue(0);
   const [swiping, setSwiping] = useState(false);
-  const [expanded, setExpanded] = useState(false);
 
-  // Right swipe (complete) - green background opacity
   const completeOpacity = useTransform(x, [0, COMPLETE_THRESHOLD], [0, 1]);
   const completeIconOpacity = useTransform(
     x,
@@ -35,7 +33,6 @@ export function SwipeableTodo({
     [0, 1]
   );
 
-  // Left swipe (delete) - red background opacity
   const deleteOpacity = useTransform(x, [DELETE_THRESHOLD, 0], [1, 0]);
   const deleteIconOpacity = useTransform(
     x,
@@ -52,7 +49,6 @@ export function SwipeableTodo({
       onDelete(todo.id);
     }
     
-    // Always bounce back
     animate(x, 0, {
       type: "spring",
       stiffness: 500,
@@ -63,7 +59,6 @@ export function SwipeableTodo({
 
   return (
     <div className="relative overflow-hidden border-b border-neutral-200 shadow-none">
-      {/* Complete action (green, behind right swipe) */}
       <motion.div
         className="absolute inset-0 flex items-center justify-start pl-5 bg-emerald-500"
         style={{ opacity: completeOpacity }}
@@ -73,7 +68,6 @@ export function SwipeableTodo({
         </motion.div>
       </motion.div>
 
-      {/* Delete action (red, behind left swipe) */}
       <motion.div
         className="absolute inset-0 flex items-center justify-end pr-5 bg-red-500"
         style={{ opacity: deleteOpacity }}
@@ -83,7 +77,6 @@ export function SwipeableTodo({
         </motion.div>
       </motion.div>
 
-      {/* Foreground - original todo item UI */}
       <motion.div
         drag="x"
         dragConstraints={{ left: 0, right: 0 }}
@@ -91,13 +84,13 @@ export function SwipeableTodo({
         style={{ x }}
         onDragStart={() => setSwiping(true)}
         onDragEnd={handleDragEnd}
-        className="relative flex items-center gap-3 bg-white py-3 px-4 touch-pan-y"
+        className="relative flex items-start gap-3 bg-white py-3 px-4 touch-pan-y"
       >
         <motion.button
           onClick={() => !swiping && onToggle(todo.id)}
           whileTap={{ scale: 0.75 }}
           transition={{ type: "spring", stiffness: 500, damping: 20 }}
-          className={`flex h-5 w-5 shrink-0 items-center justify-center rounded border transition-colors duration-200 ${
+          className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded border transition-colors duration-200 ${
             todo.completed
               ? "border-black bg-black"
               : "border-neutral-300 bg-white"
@@ -114,20 +107,17 @@ export function SwipeableTodo({
             <IconCheck size={14} stroke={3} className="text-white" />
           </motion.div>
         </motion.button>
-        <motion.span
-          onClick={() => !swiping && setExpanded(!expanded)}
-          initial={false}
-          animate={{
-            height: expanded ? "auto" : "1.25rem",
-            color: todo.completed ? "#a3a3a3" : "#000000",
-          }}
-          transition={{ duration: 0.25, ease: "easeInOut" }}
-          className={`flex-1 text-sm font-medium cursor-pointer overflow-hidden ${
-            expanded ? "" : "truncate"
-          } ${todo.completed ? "line-through decoration-neutral-300" : ""}`}
-        >
-          {todo.text}
-        </motion.span>
+        <div className="flex-1">
+          <span
+            className={`block text-sm font-medium ${
+              todo.completed
+                ? "text-neutral-400 line-through decoration-neutral-300"
+                : "text-black"
+            }`}
+          >
+            {todo.text}
+          </span>
+        </div>
       </motion.div>
     </div>
   );
