@@ -34,19 +34,24 @@ export async function getTodos(): Promise<Todo[]> {
   }
 
   const db = await getLocalDb();
-  const rows = db.prepare("SELECT * FROM todos ORDER BY created_at DESC").all() as any[];
+  const rows = db
+    .prepare("SELECT * FROM todos ORDER BY created_at DESC")
+    .all() as Array<{ id: number; text: string; completed: number }>;
   return rows.map((r) => ({ id: r.id, text: r.text, completed: !!r.completed }));
 }
 
-export async function insertTodo(text: string) {
+export async function insertTodo(text: string): Promise<number> {
   if (isVercel) {
     const { sql } = await import("@vercel/postgres");
-    await sql`INSERT INTO todos (text) VALUES (${text})`;
-    return;
+    const { rows } = await sql<{ id: number }>`
+      INSERT INTO todos (text) VALUES (${text}) RETURNING id
+    `;
+    return rows[0].id;
   }
 
   const db = await getLocalDb();
-  db.prepare("INSERT INTO todos (text) VALUES (?)").run(text);
+  const result = db.prepare("INSERT INTO todos (text) VALUES (?)").run(text);
+  return Number(result.lastInsertRowid);
 }
 
 export async function toggleTodoById(id: number) {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState } from "react";
 import {
   motion,
   useMotionValue,
@@ -43,7 +43,7 @@ export function SwipeableTodo({
     [1, 0]
   );
 
-  const handleDragEnd = async (_: any, info: PanInfo) => {
+  const handleDragEnd = async (_: unknown, info: PanInfo) => {
     const offset = info.offset.x;
 
     if (offset > COMPLETE_THRESHOLD) {
@@ -93,29 +93,38 @@ export function SwipeableTodo({
         onDragEnd={handleDragEnd}
         className="relative flex items-center gap-3 bg-white py-3 px-4 touch-pan-y"
       >
-        <button
+        <motion.button
           onClick={() => !swiping && onToggle(todo.id)}
-          className={`flex h-5 w-5 shrink-0 items-center justify-center rounded border transition-all duration-200 ${
+          whileTap={{ scale: 0.75 }}
+          transition={{ type: "spring", stiffness: 500, damping: 20 }}
+          className={`flex h-5 w-5 shrink-0 items-center justify-center rounded border transition-colors duration-200 ${
             todo.completed
-              ? "border-black bg-black scale-100"
-              : "border-neutral-300 bg-white hover:border-neutral-400"
+              ? "border-black bg-black"
+              : "border-neutral-300 bg-white"
           }`}
         >
-          <IconCheck
-            size={14}
-            stroke={3}
-            className={`text-white transition-all duration-200 ${
-              todo.completed ? "scale-100 opacity-100" : "scale-0 opacity-0"
-            }`}
-          />
-        </button>
+          <motion.div
+            initial={false}
+            animate={{
+              scale: todo.completed ? 1 : 0,
+              opacity: todo.completed ? 1 : 0,
+            }}
+            transition={{ type: "spring", stiffness: 500, damping: 25 }}
+          >
+            <IconCheck size={14} stroke={3} className="text-white" />
+          </motion.div>
+        </motion.button>
         <motion.span
           onClick={() => !swiping && setExpanded(!expanded)}
-          animate={{ height: expanded ? "auto" : "1.25rem" }}
-          transition={{ duration: 0.2, ease: "easeInOut" }}
+          initial={false}
+          animate={{
+            height: expanded ? "auto" : "1.25rem",
+            color: todo.completed ? "#a3a3a3" : "#000000",
+          }}
+          transition={{ duration: 0.25, ease: "easeInOut" }}
           className={`flex-1 text-sm font-medium cursor-pointer overflow-hidden ${
             expanded ? "" : "truncate"
-          } ${todo.completed ? "text-neutral-400" : "text-black"}`}
+          } ${todo.completed ? "line-through decoration-neutral-300" : ""}`}
         >
           {todo.text}
         </motion.span>

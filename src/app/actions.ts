@@ -7,11 +7,12 @@ export async function getTodos() {
   return fetchTodos();
 }
 
-export async function addTodo(formData: FormData) {
+export async function addTodo(formData: FormData, clientKey?: string) {
   const text = formData.get("text") as string;
-  if (!text || text.trim() === "") return;
-  await insertTodo(text.trim());
+  if (!text || text.trim() === "") return null;
+  const id = await insertTodo(text.trim());
   revalidatePath("/");
+  return { id, clientKey: clientKey ?? null };
 }
 
 export async function toggleTodo(id: number) {
