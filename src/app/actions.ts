@@ -12,7 +12,7 @@ export async function addTodo(formData: FormData, clientKey?: string) {
   if (!text || text.trim() === "") return null;
   const id = await insertTodo(text.trim());
   revalidatePath("/");
-  return { id, clientKey: clientKey ?? null };
+  return { id, clientKey };
 }
 
 export async function toggleTodo(id: number) {
