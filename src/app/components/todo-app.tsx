@@ -144,12 +144,11 @@ export function TodoApp({ todos }: { todos: Todo[] }) {
                 dispatch({ type: "add", text: text.trim(), clientKey });
               });
               const inserted = await addTodo(formData, clientKey);
-              if (inserted?.id && inserted.clientKey) {
-                setClientKeyById((prev) => ({
-                  ...prev,
-                  [inserted.id]: inserted.clientKey,
-                }));
-              }
+              if (!inserted || !inserted.clientKey) return;
+              setClientKeyById((prev) => ({
+                ...prev,
+                [inserted.id]: inserted.clientKey,
+              }));
             }}
             className="relative flex items-center rounded-full bg-neutral-100 shadow-[0_2px_12px_rgba(0,0,0,0.08)] ring-1 ring-neutral-200/60"
           >
