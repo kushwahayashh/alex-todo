@@ -123,13 +123,14 @@ export function TodoApp({ todos }: { todos: Todo[] }) {
           </motion.ul>
         )}
       </AnimatePresence>
+      <div className="pointer-events-none fixed bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white via-white/80 to-transparent z-30" />
       <motion.div
         initial={{ y: 80, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ type: "spring", stiffness: 300, damping: 25, delay: 0.1 }}
-        className="fixed bottom-4 left-0 right-0 px-4 pb-[env(safe-area-inset-bottom,0px)]"
+        className="fixed bottom-4 left-0 right-0 px-4 pb-[env(safe-area-inset-bottom,0px)] z-40"
       >
-        <div className="mx-auto max-w-md">
+        <div className="relative mx-auto max-w-md">
           <form
             ref={formRef}
             autoComplete="off"

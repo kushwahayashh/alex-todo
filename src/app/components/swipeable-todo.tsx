@@ -58,7 +58,8 @@ export function SwipeableTodo({
   };
 
   return (
-    <div className="relative overflow-hidden border-b border-neutral-200 shadow-none">
+    <div className="relative overflow-hidden shadow-none">
+      <div className="absolute bottom-0 left-4 right-4 border-b border-neutral-200 z-10" />
       <motion.div
         className="absolute inset-0 flex items-center justify-start pl-5 bg-emerald-500"
         style={{ opacity: completeOpacity }}
