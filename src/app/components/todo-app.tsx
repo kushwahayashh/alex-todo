@@ -14,7 +14,7 @@ type OptimisticAction =
   | { type: "delete"; id: number };
 
 export function TodoApp({ todos }: { todos: Todo[] }) {
-  const [clientKeyById, setClientKeyById] = useState<Record<number, string>>({});
+  const [clientKeyById, setClientKeyById] = useState<Partial<Record<number, string>>>({});
 
   const [optimisticTodos, dispatch] = useOptimistic<RenderTodo[], OptimisticAction>(
     todos,
