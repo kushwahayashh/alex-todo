@@ -32,7 +32,21 @@ jobs:
             -storepass android123 \
             -keypass android123
 
-      - name: Build with Bubblewrap (Docker)
+      - name: Init Bubblewrap project
+        working-directory: twa
+        run: |
+          yes "" | docker run --rm -i \
+            -v "$(pwd):/work" \
+            -w /work \
+            ghcr.io/googlechromelabs/bubblewrap:latest \
+            init --manifest="https://alexhasitbig.vercel.app/manifest.webmanifest" || true
+
+      - name: Restore custom TWA manifest
+        working-directory: twa
+        run: |
+          git checkout -- twa-manifest.json
+
+      - name: Build APK
         working-directory: twa
         run: |
           docker run --rm \
@@ -45,11 +59,12 @@ jobs:
 
       - name: List build output
         working-directory: twa
+        if: always()
         run: |
-          echo "=== Files in twa/ ==="
+          echo "=== Files ==="
           ls -la
-          echo "=== Looking for APK ==="
-          find . -name "*.apk" -o -name "*.aab" 2>/dev/null || true
+          echo "=== APKs ==="
+          find . -name "*.apk" 2>/dev/null || echo "No APK found"
 
       - name: Determine version
         id: version
