@@ -10,6 +10,14 @@ const spaceGrotesk = Space_Grotesk({
 export const metadata: Metadata = {
   title: "AlexTodo",
   description: "A minimal todo app",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "AlexTodo",
+  },
+  icons: {
+    apple: "/apple-touch-icon.png",
+  },
 };
 
 export default function RootLayout({
