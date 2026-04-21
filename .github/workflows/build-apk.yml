@@ -46,6 +46,12 @@ jobs:
             -storepass android123 \
             -keypass android123
 
+      - name: Configure Bubblewrap
+        run: |
+          mkdir -p "$HOME/.aspect"
+          echo "jdkPath=$JAVA_HOME" > "$HOME/.aspect/aspect-cli.properties"
+          echo "androidSdkPath=$ANDROID_HOME" >> "$HOME/.aspect/aspect-cli.properties"
+
       - name: Build with Bubblewrap
         working-directory: twa
         env:
